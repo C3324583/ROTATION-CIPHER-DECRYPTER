@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+void Find_in_file(*10000words);
 int main(){
     //initialising variables
+    FILE *
 	char text[126], element;
 	int i, rotationkey;
 	
@@ -22,3 +23,16 @@ int main(){
 	
 	return 0;
 }
+
+
+void Find_in_file(*10000words){
+
+    while(fgets(temp, 512, fp) != NULL) {
+		if((strstr(temp, str)) != NULL) {
+			printf("A match found on line: %d\n", line_num);
+			printf("\n%s\n", temp);
+			find_result++;
+		}
+		line_num++;
+	}
+}	
