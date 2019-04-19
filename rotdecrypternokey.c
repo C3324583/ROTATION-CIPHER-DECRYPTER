@@ -1,56 +1,58 @@
 #include <stdio.h>
-#include <stdlib.h>
-//might have to include string library
-
-int Find_in_file(char *words, char *text);
+#include <string.h>
 
 int main(){
     
     //initialising variables
     FILE *words;
-    char text[1000], element;
+    char text[1000], fileline[100];
 	int i, rotationkey, count=0;
 
 	words = fopen("20000_words.txt", "r");
+	if(words=='\0'){
+	    printf("error opening file");
+	}
 	
 	printf("Enter message to be decrypted: ");//prompt the user to imput a message
 	scanf(" %[^\n]s", text);//store the text imputted by the user in the array 'text'
 	
-	if(element >= 'a' && element <= 'z'){
-			element = element + rotationkey - 32;
-			
-	for(rotationkey=0; rotationkey<26; rotationkey++){
-	    
-	    /* This for loop executes the rotation for every letter in the array "text" */
-	    for (i=0; text[i]!='\0'; i++){
-	        
-	        /* Each lowercase letter is rotated by the "rotationkey" */
-	        if(text[i] >= 'a' && text[i] <= 'z'){
-	            text[i] = text[i] + rotationkey;
-            }
-            
-            /* Each UPPERCASE letter of the string is turned into lowercase by subtracting 32 
-            (according to the ASCII standard) and then rotated by the "rotationkey". This is done
-            because every word in the text file is in lowercase. */
-            if(text[i] >= 'A' && text[i] <= 'Z'){
-	            text[i] = text[i] + rotationkey + 32;
-            }
-            
-            /* If the rotation causes the element to have a value outside 'a'....'z' (according 
-            to the ASCII standard), 26 is subtracted to give the rotated letter*/
-            if(element > 'Z' || element < 'A'){
-				element = element - 26;
+	
+	
+	for(rotationkey=1; rotationkey<27; ++rotationkey){
+	   
+	    //This for loop executes the rotation for all letters in the array "text" until the text[i] occupying index i is empty
+	    for(i = 0; text[i] != '\0'; ++i){
+		
+		    //Each lowercase letter of the string is turned into UPPERCASE by subtracting 32 (according to the ASCII standard) and then rotated backwards by the "rotationkey"
+     		if(text[i] >= 'A' && text[i] <= 'Z'){
+	    		text[i] = text[i] + 32 + 1;
+		    	//If the rotation causes the text[i] to have a value outside 'a'....'z' (according to the ASCII standard), 26 is added to give the rotated letter
+    			if(text[i] > 'z' || text[i] < 'a'){
+	    			text[i] = text[i] - 26;
+    			}
+    		}
+		
+	    	//Each UPPERCASE letter is rotated backwards by the "rotationkey"
+		    else if(text[i] >= 'a' && text[i] <= 'z'){
+			    text[i] = text[i] + 1;
+			    //If the rotation causes the text[i] to have a value outside 'a'....'z' (according to the ASCII standard), 26 is added to give the rotated letter
+			    if(text[i] > 'z' || text[i] < 'a'){
+				    text[i] = text[i] - 26;
+			    }
 		    }
 	    }
+
 	    
-	    /* Returns the number of matches found by the function as an integer and assigns this value to 
-	    the variable "count" */
-	    count = Find_in_file(words, text);
-	    
-	    if(count>=3){
-	        break;
+	    while(fgets(fileline, 100, words) != '\0') {
+        
+            if(strstr(text, fileline) != '\0') {
+			    count++;
+	        }
 	    }
 	    
+	    if(count>=3){
+	         break;
+	    }
 	}
 	
 	printf("Decrypted message: %s", text); //prints the correctly rotated message to the screen
